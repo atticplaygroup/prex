@@ -1,0 +1,13 @@
+{
+  "protoc": {
+    "options": [
+      "--proto_path=${workspaceRoot}/pkg/proto",
+      "--go_out=${workspaceRoot}/pkg/proto/gen/go",
+      "--go_opt=paths=source_relative",
+      "--go-grpc_out=${workspaceRoot}/pkg/proto/gen/go",
+      "--go-grpc_opt=paths=source_relative",
+      "--grpc-gateway_out=${workspaceRoot}/pkg/proto/gen/go",
+      "--grpc-gateway_opt=paths=source_relative"
+    ]
+  }
+}
