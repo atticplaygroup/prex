@@ -7,7 +7,7 @@
 
 Prex (PAID Request EXchange) facilitates the matching of client requests with [PAID (Permissionless Autonomous Incentivized Decoupled)](overview/paid-service.md) services, aiming to establish an [efficient market](https://www.investopedia.com/terms/e/efficientmarkethypothesis.asp) for requests and services through a [limit order book](https://en.wikipedia.org/wiki/Central_limit_order_book). It seeks to offer a monetization model that is an alternative or complement of advertisement-based revenue generation for contemporary Internet businesses.
 
-Read more in the [documentation](./docs/index.md#what-is-prex).
+Read more in the [documentation](https://github.com/atticplaygroup/prex/wiki/Home#what-is-prex).
 
 ## Installation
 
@@ -65,13 +65,13 @@ User Agent->>Service Provider:Access token
 Service Provider->>User Agent:Response
 ```
 
-Follow the [quickstart guide](overview/getting-started.md) for an example of echo server exchanged on Prex and made PAID.
+Follow the [quickstart guide](https://github.com/atticplaygroup/prex/wiki/getting-started) for an example of echo server exchanged on Prex and made PAID.
 
 ## Further Reading
 
-- Read the [quickstart guide](overview/getting-started.md) to see what Prex can do.  
-- Read about [the motivation behind PAID services](overview/paid-service.md).
-- Compare PAID services [with related technologies](overview/design-decisions.md).
+- Read the [quickstart guide](https://github.com/atticplaygroup/prex/wiki/getting-started) to see what Prex can do.  
+- Read about [the motivation behind PAID services](https://github.com/atticplaygroup/prex/wiki/paid-service).
+- Compare PAID services [with related technologies](https://github.com/atticplaygroup/prex/wiki/design-decisions).
 
 ## License
 
