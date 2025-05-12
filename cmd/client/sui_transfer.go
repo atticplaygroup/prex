@@ -6,10 +6,10 @@ import (
 	"log"
 	"strconv"
 
+	"github.com/atticplaygroup/prex/internal/utils"
 	"github.com/block-vision/sui-go-sdk/models"
 	"github.com/block-vision/sui-go-sdk/signer"
 	"github.com/block-vision/sui-go-sdk/sui"
-	"github.com/block-vision/sui-go-sdk/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -35,7 +35,7 @@ var suiTransferCmd = &cobra.Command{
 		}
 
 		var ctx = context.Background()
-		var cli = sui.NewSuiClient(getSuiFullNodeHost(network))
+		var cli = sui.NewSuiClient(utils.GetSuiFullNodeHost(network))
 
 		signerAccount, err := signer.NewSignertWithMnemonic(conf.Account.Mnemonic)
 		if err != nil {
@@ -57,7 +57,7 @@ var suiTransferCmd = &cobra.Command{
 			fmt.Println(err.Error())
 			return
 		}
-		rsp2, err := cli.SignAndExecuteTransactionBlock(ctx, models.SignAndExecuteTransactionBlockRequest{
+		_, err = cli.SignAndExecuteTransactionBlock(ctx, models.SignAndExecuteTransactionBlockRequest{
 			TxnMetaData: rsp,
 			PriKey:      priKey,
 			Options: models.SuiTransactionBlockOptions{
@@ -70,7 +70,6 @@ var suiTransferCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("failed to execute transaction: %v", err)
 		}
-		utils.PrettyPrint(rsp2)
 	},
 }
 

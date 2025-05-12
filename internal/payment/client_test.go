@@ -3,10 +3,12 @@ package payment_test
 import (
 	"context"
 	"log"
+	"os"
 	"strconv"
 	"time"
 
 	"github.com/atticplaygroup/prex/internal/payment"
+	"github.com/atticplaygroup/prex/internal/utils"
 	"github.com/block-vision/sui-go-sdk/sui"
 
 	"github.com/block-vision/sui-go-sdk/models"
@@ -79,14 +81,19 @@ var _ = Describe("Transfer with Sui", Label("sui"), func() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	client, err := payment.NewSuiPaymentClient("localnet", platform)
+
+	suiNetwork := os.Getenv("SUI_NETWORK")
+	if suiNetwork == "" {
+		suiNetwork = "devnet"
+	}
+	client, err := payment.NewSuiPaymentClient(suiNetwork, platform)
 	if err != nil {
 		log.Fatal(err)
 	}
 	It("should discover successful deposit", func() {
 		ctx := context.Background()
 		header := map[string]string{}
-		err = sui.RequestSuiFromFaucet("http://127.0.0.1:9123", sender.Address, header)
+		err = sui.RequestSuiFromFaucet(utils.GetSuiFaucetHost(suiNetwork), sender.Address, header)
 		Expect(err).To(BeNil())
 
 		amount := 1_000_000
@@ -120,7 +127,7 @@ var _ = Describe("Transfer with Sui", Label("sui"), func() {
 
 	It("should return pending not found withdrawal", func() {
 		ctx := context.Background()
-		client1, err := payment.NewSuiPaymentClient("localnet", platform)
+		client1, err := payment.NewSuiPaymentClient(suiNetwork, platform)
 		client1.SetEpochGetter(&MockEpochGetter{})
 		Expect(err).To(BeNil())
 		status, err := client1.CheckTransactionStatus(
@@ -164,6 +171,10 @@ var _ = Describe("Transfer with Sui", Label("sui"), func() {
 
 	It("should withdraw multiple recipients", func() {
 		ctx := context.Background()
+		header := map[string]string{}
+		err = sui.RequestSuiFromFaucet(utils.GetSuiFaucetHost(suiNetwork), client.Signer.Address, header)
+		Expect(err).To(BeNil())
+
 		transferInfo := make([]payment.TransferInfo, 0)
 		transferInfo = append(transferInfo, payment.TransferInfo{
 			Amount:  10_000_000,
@@ -173,7 +184,7 @@ var _ = Describe("Transfer with Sui", Label("sui"), func() {
 			Amount:  20_000_000,
 			Address: recipient.Address,
 		})
-		suiTx, err := client.PrepareWithdrawTransaction(ctx, transferInfo, 8_000_000)
+		suiTx, err := client.PrepareWithdrawTransaction(ctx, transferInfo, 1_000_000)
 		Expect(err).To(BeNil())
 		digest, err := client.Withdraw(ctx, suiTx)
 		Expect(err).To(BeNil())

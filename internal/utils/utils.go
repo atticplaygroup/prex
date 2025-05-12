@@ -3,6 +3,7 @@ package utils
 import (
 	"encoding/hex"
 	"fmt"
+	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -206,4 +207,34 @@ func ParsePagination(req IPagination) (*Pagination, error) {
 		Skip:     skip,
 		PageSize: pageSize,
 	}, nil
+}
+
+func GetSuiFaucetHost(network string) string {
+	switch network {
+	case "devnet":
+		return "https://faucet.devnet.sui.io"
+	case "testnet":
+		return "https://faucet.testnet.sui.io"
+	case "localnet":
+		return "http://127.0.0.1:9123"
+	default:
+	}
+	log.Fatalf("faucet network should in [devnet, testnet, localnet]")
+	return ""
+}
+
+func GetSuiFullNodeHost(network string) string {
+	switch network {
+	case "mainnet":
+		return "https://fullnode.mainnet.sui.io:443"
+	case "devnet":
+		return "https://fullnode.devnet.sui.io:443"
+	case "testnet":
+		return "https://fullnode.testnet.sui.io:443"
+	case "localnet":
+		return "http://127.0.0.1:9000"
+	default:
+	}
+	log.Fatalf("faucet network should in [mainnet, devnet, testnet, localnet]")
+	return ""
 }
