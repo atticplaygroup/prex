@@ -92,8 +92,7 @@ var _ = Describe("Transfer with Sui", Label("sui"), func() {
 	}
 	It("should discover successful deposit", func() {
 		ctx := context.Background()
-		header := map[string]string{}
-		err = sui.RequestSuiFromFaucet(utils.GetSuiFaucetHost(suiNetwork), sender.Address, header)
+		err = utils.RequestSuiFromFaucet(suiNetwork, sender.Address)
 		Expect(err).To(BeNil())
 
 		amount := 1_000_000
@@ -171,8 +170,7 @@ var _ = Describe("Transfer with Sui", Label("sui"), func() {
 
 	It("should withdraw multiple recipients", func() {
 		ctx := context.Background()
-		header := map[string]string{}
-		err = sui.RequestSuiFromFaucet(utils.GetSuiFaucetHost(suiNetwork), client.Signer.Address, header)
+		err = utils.RequestSuiFromFaucet(suiNetwork, client.Signer.Address)
 		Expect(err).To(BeNil())
 
 		transferInfo := make([]payment.TransferInfo, 0)
@@ -205,3 +203,4 @@ var _ = Describe("Transfer with Sui", Label("sui"), func() {
 		Expect(q.TransactionBlock.Sender.Address).To(Equal(client.Signer.Address))
 	})
 })
+
