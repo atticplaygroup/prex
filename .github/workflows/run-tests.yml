@@ -32,6 +32,7 @@ jobs:
         uses: devcontainers/ci@v0.3
         with:
           imageName: ghcr.io/atticplaygroup/prex-devcontainer
+          cacheFrom: ghcr.io/atticplaygroup/prex-devcontainer
           runCmd: |
             echo "Building the devcontainer"          
 
