@@ -39,9 +39,9 @@ jobs:
         uses: devcontainers/ci@v0.3
         with:
           imageName: ghcr.io/atticplaygroup/prex-devcontainer
+          cacheFrom: ghcr.io/atticplaygroup/prex-devcontainer
           runCmd: |
-            echo "user: $(whoami)"
-            go run github.com/onsi/ginkgo/v2/ginkgo internal/*|
+            go run github.com/onsi/ginkgo/v2/ginkgo internal/*
           env: |
             GOPATH=/home/vscode/go
             GOMODCACHE=/home/vscode/go/pkg/mod
@@ -51,6 +51,7 @@ jobs:
         uses: devcontainers/ci@v0.3
         with:
           imageName: ghcr.io/atticplaygroup/prex-devcontainer
+          cacheFrom: ghcr.io/atticplaygroup/prex-devcontainer
           runCmd: |
             echo "user: $(whoami)"
             bash scripts/api-tests.sh
