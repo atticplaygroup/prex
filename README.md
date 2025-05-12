@@ -3,6 +3,10 @@
 > [!WARNING]
 > Disclaimer: Prex is not ready for production usage yet. Use at your own risk. API is also subject to change.
 
+[![Generated Code Checking](https://github.com/atticplaygroup/prex/actions/workflows/verify-generated-code.yml/badge.svg)](https://github.com/atticplaygroup/prex/actions/workflows/verify-generated-code.yml)
+[![Unit Tests](https://github.com/atticplaygroup/prex/actions/workflows/run-unit-tests.yml/badge.svg)](https://github.com/atticplaygroup/prex/actions/workflows/run-unit-tests.yml)
+[![API Tests](https://github.com/atticplaygroup/prex/actions/workflows/run-api-tests.yml/badge.svg)](https://github.com/atticplaygroup/prex/actions/workflows/run-api-tests.yml)
+
 ## What is Prex
 
 Prex (PAID Request EXchange) facilitates the matching of client requests with [PAID (Permissionless Autonomous Incentivized Decoupled)](overview/paid-service.md) services, aiming to establish an [efficient market](https://www.investopedia.com/terms/e/efficientmarkethypothesis.asp) for requests and services through a [limit order book](https://en.wikipedia.org/wiki/Central_limit_order_book). It seeks to offer a monetization model that is an alternative or complement of advertisement-based revenue generation for contemporary Internet businesses.
