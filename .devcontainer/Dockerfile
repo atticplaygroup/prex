@@ -30,9 +30,5 @@ RUN go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest && \
     go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest && \
     go install github.com/spf13/cobra-cli@latest && \
     go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
-RUN python3 -m pip install -U --break-system-packages pip && \
-    python3 -m pip install --break-system-packages mkdocs-material
 USER root
-RUN git clone https://github.com/googleapis/googleapis.git /workspaces/googleapis
-RUN git clone https://github.com/protocolbuffers/protobuf.git /workspaces/protobuf
-WORKDIR /workspaces/app
+WORKDIR /workspaces/prex
