@@ -24,9 +24,9 @@ jobs:
       - name: Run unit tests
         uses: devcontainers/ci@v0.3
         with:
-          runCmd: sudo go run github.com/onsi/ginkgo/v2/ginkgo internal/*
+          runCmd: sudo mkdir -p /home/runner && go run github.com/onsi/ginkgo/v2/ginkgo internal/*
 
       - name: Run API tests
         uses: devcontainers/ci@v0.3
         with:
-          runCmd: sudo bash scripts/api-tests.sh
+          runCmd: sudo mkdir -p /home/runner && bash scripts/api-tests.sh
