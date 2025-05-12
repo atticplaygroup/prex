@@ -182,6 +182,8 @@ var _ = Describe("Transfer with Sui", Label("sui"), func() {
 			Amount:  20_000_000,
 			Address: recipient.Address,
 		})
+
+		time.Sleep(5 * time.Second)
 		suiTx, err := client.PrepareWithdrawTransaction(ctx, transferInfo, 1_000_000)
 		Expect(err).To(BeNil())
 		digest, err := client.Withdraw(ctx, suiTx)
@@ -203,4 +205,3 @@ var _ = Describe("Transfer with Sui", Label("sui"), func() {
 		Expect(q.TransactionBlock.Sender.Address).To(Equal(client.Signer.Address))
 	})
 })
-
