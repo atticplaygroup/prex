@@ -44,8 +44,7 @@ jobs:
           env: |
             GOPATH=/home/vscode/go
             GOMODCACHE=/home/vscode/go/pkg/mod
-            PATH=/workspaces/app/bin:/workspaces/app/scripts:/usr/local/go/bin:/usr/local/go/bin:/usr/local/bin:/usr/bin:/bi
-n:/home/vscode/.local/bin:/usr/local/sbin:/usr/sbin:/sbin:/bin:/usr/lib/postgresql/17/bin:/go/bin
+            PATH=/workspaces/app/bin:/workspaces/app/scripts:/usr/local/go/bin:/usr/local/go/bin:/usr/local/bin:/usr/bin:/bin:/home/vscode/.local/bin:/usr/local/sbin:/usr/sbin:/sbin:/bin:/usr/lib/postgresql/17/bin:/go/bin
 
       - name: Run API tests
         uses: devcontainers/ci@v0.3
@@ -57,5 +56,4 @@ n:/home/vscode/.local/bin:/usr/local/sbin:/usr/sbin:/sbin:/bin:/usr/lib/postgres
           env: |
             GOPATH=/home/vscode/go
             GOMODCACHE=/home/vscode/go/pkg/mod
-            PATH=/workspaces/app/bin:/workspaces/app/scripts:/usr/local/go/bin:/usr/local/go/bin:/usr/local/bin:/usr/bin:/bi
-n:/home/vscode/.local/bin:/usr/local/sbin:/usr/sbin:/sbin:/bin:/usr/lib/postgresql/17/bin:/go/bin
+            PATH="/workspaces/app/bin:/workspaces/app/scripts:/usr/local/go/bin:/usr/local/go/bin:/usr/local/bin:/usr/bin:/bin:/home/vscode/.local/bin:/usr/local/sbin:/usr/sbin:/sbin:/bin:/usr/lib/postgresql/17/bin:/go/bin"
