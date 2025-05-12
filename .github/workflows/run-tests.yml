@@ -12,6 +12,12 @@ jobs:
       - name: Set env
         run: cat .env.example > $GITHUB_ENV
 
+      - name: Set writable GOPATH
+        run: |
+          mkdir -p $HOME/go
+          echo "GOPATH=$HOME/go" >> $GITHUB_ENV
+
+
       - name: Run unit tests
         uses: devcontainers/ci@v0.3
         with:

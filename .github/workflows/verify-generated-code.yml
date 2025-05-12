@@ -26,6 +26,8 @@ jobs:
           go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@v2.26.3
           go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.6
           go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.5.1
+          echo "/go/bin" >> $GITHUB_PATH
+          echo "/usr/local/go/bin" >> $GITHUB_PATH
 
       - name: Verify generated code
         run: |
