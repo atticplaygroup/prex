@@ -1,8 +1,14 @@
 package utils
 
 import (
+	"bytes"
 	"encoding/hex"
+	"encoding/json"
+	"errors"
 	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
 	"regexp"
 	"strconv"
 	"strings"
@@ -10,6 +16,7 @@ import (
 
 	db "github.com/atticplaygroup/prex/internal/db/sqlc"
 	pb "github.com/atticplaygroup/prex/pkg/proto/gen/go/exchange"
+	"github.com/block-vision/sui-go-sdk/models"
 	"github.com/google/uuid"
 	"github.com/ssoready/hyrumtoken"
 	"google.golang.org/grpc/codes"
@@ -207,3 +214,93 @@ func ParsePagination(req IPagination) (*Pagination, error) {
 		PageSize: pageSize,
 	}, nil
 }
+
+func GetSuiFaucetHost(network string) string {
+	switch network {
+	case "devnet":
+		return "https://faucet.devnet.sui.io"
+	case "mainnet":
+		return "https://faucet.mainnet.sui.io"
+	case "testnet":
+		return "https://faucet.testnet.sui.io"
+	case "localnet":
+		return "http://127.0.0.1:9123"
+	default:
+	}
+	log.Fatalf("faucet network should in [devnet, testnet, localnet]")
+	return ""
+}
+
+func GetSuiFullNodeHost(network string) string {
+	switch network {
+	case "mainnet":
+		return "https://fullnode.mainnet.sui.io:443"
+	case "devnet":
+		return "https://fullnode.devnet.sui.io:443"
+	case "testnet":
+		return "https://fullnode.testnet.sui.io:443"
+	case "localnet":
+		return "http://127.0.0.1:9000"
+	default:
+	}
+	log.Fatalf("faucet network should in [mainnet, devnet, testnet, localnet]")
+	return ""
+}
+
+const (
+	faucetUriGasV0 = "/gas"
+	faucetUriGasV1 = "/v1/gas"
+	faucetUriGasV2 = "/v2/gas"
+)
+
+func RequestSuiFromFaucet(network, recipientAddress string) error {
+	faucetHost := GetSuiFaucetHost(network)
+	body := models.FaucetRequest{
+		FixedAmountRequest: &models.FaucetFixedAmountRequest{
+			Recipient: recipientAddress,
+		},
+	}
+
+	err := faucetRequest(faucetHost+faucetUriGasV2, body, map[string]string{})
+
+	return err
+}
+
+// Copied from https://github.com/block-vision/sui-go-sdk/blob/main/sui/faucet_api.go because it does not support v2 faucet
+func faucetRequest(faucetUrl string, body interface{}, headers map[string]string) error {
+	jsonBody, err := json.Marshal(body)
+	if err != nil {
+		return errors.New(fmt.Sprintf("Marshal request body error: %s", err.Error()))
+	}
+
+	req, err := http.NewRequest(http.MethodPost, faucetUrl, bytes.NewBuffer(jsonBody))
+	if err != nil {
+		return errors.New(fmt.Sprintf("Create request error: %s", err.Error()))
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+
+	for key, value := range headers {
+		req.Header.Set(key, value)
+	}
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return errors.New(fmt.Sprintf("Request faucet error: %s", err.Error()))
+	}
+
+	defer resp.Body.Close()
+
+	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return errors.New(fmt.Sprintf("Read response body error: %s", err.Error()))
+	}
+
+	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusAccepted {
+		return errors.New(fmt.Sprintf("Request faucet failed, statusCode: %d, err: %+v", resp.StatusCode, string(bodyBytes)))
+	}
+
+	return nil
+}
+

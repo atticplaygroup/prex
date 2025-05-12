@@ -1,0 +1,1349 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "exchange/exchange.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "Exchange"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/accounts:prune": {
+      "post": {
+        "operationId": "Exchange_PruneAccounts",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoPruneAccountsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoPruneAccountsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Exchange"
+        ]
+      }
+    },
+    "/v1/challenge": {
+      "get": {
+        "operationId": "Exchange_GetChallenge",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoGetChallengeResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "address",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Exchange"
+        ]
+      }
+    },
+    "/v1/deposit": {
+      "post": {
+        "operationId": "Exchange_Deposit",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoDepositResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoDepositRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Exchange"
+        ]
+      }
+    },
+    "/v1/fulfilled-orders:prune": {
+      "post": {
+        "operationId": "Exchange_BatchPruneFulfilledOrders",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoBatchPruneFulfilledOrdersResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoBatchPruneFulfilledOrdersRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Exchange"
+        ]
+      }
+    },
+    "/v1/login": {
+      "post": {
+        "operationId": "Exchange_Login",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoLoginResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoLoginRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Exchange"
+        ]
+      }
+    },
+    "/v1/payment-methods": {
+      "get": {
+        "operationId": "Exchange_ListPaymentMethods",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoListPaymentMethodsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Exchange"
+        ]
+      }
+    },
+    "/v1/ping": {
+      "get": {
+        "operationId": "Exchange_Ping",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoPingResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Exchange"
+        ]
+      }
+    },
+    "/v1/quota-token:activate": {
+      "post": {
+        "operationId": "Exchange_ActivateQuotaToken",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoActivateQuotaTokenResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoActivateQuotaTokenRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Exchange"
+        ]
+      }
+    },
+    "/v1/services": {
+      "get": {
+        "operationId": "Exchange_ListServices",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoListServicesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageToken",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Exchange"
+        ]
+      }
+    },
+    "/v1/services:create": {
+      "post": {
+        "operationId": "Exchange_CreateService",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoCreateServiceResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "service",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoService"
+            }
+          }
+        ],
+        "tags": [
+          "Exchange"
+        ]
+      }
+    },
+    "/v1/withdraws:batchMark": {
+      "post": {
+        "operationId": "Exchange_BatchMarkWithdraws",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoBatchMarkWithdrawsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoBatchMarkWithdrawsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Exchange"
+        ]
+      }
+    },
+    "/v1/withdraws:batchProcess": {
+      "post": {
+        "operationId": "Exchange_BatchProcessWithdraws",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoBatchProcessWithdrawsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoBatchProcessWithdrawsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Exchange"
+        ]
+      }
+    },
+    "/v1/{name}": {
+      "get": {
+        "operationId": "Exchange_GetWithdraw",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoWithdrawal"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "accounts/[^/]+/withdraws/[^/]+"
+          }
+        ],
+        "tags": [
+          "Exchange"
+        ]
+      },
+      "delete": {
+        "operationId": "Exchange_DeleteSellOrder",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "services/[^/]+/sell-orders/[^/]+"
+          },
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "Exchange"
+        ]
+      }
+    },
+    "/v1/{name}:cancel": {
+      "post": {
+        "operationId": "Exchange_CancelWithdraw",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "accounts/[^/]+/withdraws/[^/]+"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ExchangeCancelWithdrawBody"
+            }
+          }
+        ],
+        "tags": [
+          "Exchange"
+        ]
+      }
+    },
+    "/v1/{name}:claim": {
+      "post": {
+        "operationId": "Exchange_ClaimToken",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoClaimTokenResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "services/[^/]+/fulfilled-orders/[^/]+"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ExchangeClaimTokenBody"
+            }
+          }
+        ],
+        "tags": [
+          "Exchange"
+        ]
+      }
+    },
+    "/v1/{name}:claimFree": {
+      "post": {
+        "operationId": "Exchange_ClaimFreeToken",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoClaimTokenResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "services/[^/]+/fulfilled-orders/[^/]+"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ExchangeClaimFreeTokenBody"
+            }
+          }
+        ],
+        "tags": [
+          "Exchange"
+        ]
+      }
+    },
+    "/v1/{name}:delete": {
+      "delete": {
+        "operationId": "Exchange_DeleteService",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "services/[^/]+"
+          }
+        ],
+        "tags": [
+          "Exchange"
+        ]
+      }
+    },
+    "/v1/{parent}/fulfilled-orders": {
+      "get": {
+        "operationId": "Exchange_ListFulfilledOrders",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoListFulfilledOrdersResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "parent",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "services/[^/]+"
+          },
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageToken",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "minRemainingQuantity",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "Exchange"
+        ]
+      }
+    },
+    "/v1/{parent}/sell-orders:create": {
+      "post": {
+        "operationId": "Exchange_CreateSellOrder",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoCreateSellOrderResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "parent",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "services/[^/]+"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ExchangeCreateSellOrderBody"
+            }
+          }
+        ],
+        "tags": [
+          "Exchange"
+        ]
+      }
+    },
+    "/v1/{parent}/sell-orders:match": {
+      "post": {
+        "operationId": "Exchange_MatchOrder",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoMatchOrderResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "parent",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "services/[^/]+"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ExchangeMatchOrderBody"
+            }
+          }
+        ],
+        "tags": [
+          "Exchange"
+        ]
+      }
+    },
+    "/v1/{parent}/withdraws:create": {
+      "post": {
+        "operationId": "Exchange_CreateWithdraw",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoWithdrawal"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "parent",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "accounts/[^/]+"
+          },
+          {
+            "name": "withdrawal",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoWithdrawal",
+              "required": [
+                "withdrawal"
+              ]
+            }
+          },
+          {
+            "name": "withdrawAll",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "Exchange"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "ExchangeCancelWithdrawBody": {
+      "type": "object"
+    },
+    "ExchangeClaimFreeTokenBody": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "audience": {
+          "type": "string",
+          "title": "TODO: audience should not be a user given variable. Should be seller given"
+        },
+        "argJson": {
+          "type": "string"
+        }
+      }
+    },
+    "ExchangeClaimTokenBody": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "audience": {
+          "type": "string",
+          "title": "TODO: audience should not be a user given variable. Should be seller given"
+        },
+        "argJson": {
+          "type": "string"
+        }
+      }
+    },
+    "ExchangeCreateSellOrderBody": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "sellOrder": {
+          "$ref": "#/definitions/protoSellOrder"
+        }
+      }
+    },
+    "ExchangeMatchOrderBody": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "bidPrice": {
+          "type": "string",
+          "format": "int64"
+        },
+        "minExpireTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "quantity": {
+          "type": "string",
+          "format": "int64",
+          "title": "TODO: support filtering sellers based on tags or a list"
+        }
+      }
+    },
+    "protoAccount": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "accountId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "username": {
+          "type": "string"
+        },
+        "expireTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "balance": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "protoActivateQuotaTokenRequest": {
+      "type": "object",
+      "properties": {
+        "serviceId": {
+          "type": "string",
+          "format": "int64",
+          "title": "string token = 1;"
+        },
+        "orderClaimId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "quotaQuantity": {
+          "type": "string",
+          "format": "int64"
+        },
+        "expireAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "protoActivateQuotaTokenResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "protoBatchMarkWithdrawsRequest": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "protoBatchMarkWithdrawsResponse": {
+      "type": "object",
+      "properties": {
+        "successWithdrawIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "int64"
+          }
+        }
+      }
+    },
+    "protoBatchProcessWithdrawsRequest": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "protoBatchProcessWithdrawsResponse": {
+      "type": "object",
+      "properties": {
+        "digest": {
+          "type": "string"
+        },
+        "batchSize": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "protoBatchPruneFulfilledOrdersRequest": {
+      "type": "object"
+    },
+    "protoBatchPruneFulfilledOrdersResponse": {
+      "type": "object",
+      "properties": {
+        "sellOrdersCleaned": {
+          "type": "string",
+          "format": "int64"
+        },
+        "fulfilledOrdersCleaned": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "protoClaimTokenResponse": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "protoCreateSellOrderResponse": {
+      "type": "object",
+      "properties": {
+        "sellOrder": {
+          "$ref": "#/definitions/protoSellOrder"
+        }
+      }
+    },
+    "protoCreateServiceResponse": {
+      "type": "object",
+      "properties": {
+        "service": {
+          "$ref": "#/definitions/protoService"
+        }
+      }
+    },
+    "protoDepositRequest": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "ttl": {
+          "type": "string"
+        },
+        "proof": {
+          "$ref": "#/definitions/protoSuiDepositProof"
+        }
+      }
+    },
+    "protoDepositResponse": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "$ref": "#/definitions/protoAccount"
+        }
+      }
+    },
+    "protoFulfilledOrder": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "serviceId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "sellOrderId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "buyerId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "sellerId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "dealPrice": {
+          "type": "string",
+          "format": "int64"
+        },
+        "dealQuantity": {
+          "type": "string",
+          "format": "int64"
+        },
+        "dealTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "remainingQuantity": {
+          "type": "string",
+          "format": "int64"
+        },
+        "serviceExpireTime": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "protoGetChallengeResponse": {
+      "type": "object",
+      "properties": {
+        "challenge": {
+          "type": "string",
+          "format": "byte"
+        },
+        "startTime": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "protoListFulfilledOrdersResponse": {
+      "type": "object",
+      "properties": {
+        "fulfilledOrders": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protoFulfilledOrder"
+          }
+        },
+        "nextPageToken": {
+          "type": "string"
+        }
+      }
+    },
+    "protoListPaymentMethodsResponse": {
+      "type": "object",
+      "properties": {
+        "paymentMethods": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protoPaymentMethod"
+          }
+        }
+      }
+    },
+    "protoListServicesResponse": {
+      "type": "object",
+      "properties": {
+        "services": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protoService"
+          }
+        },
+        "nextPageToken": {
+          "type": "string"
+        }
+      }
+    },
+    "protoLoginRequest": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "protoLoginResponse": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "$ref": "#/definitions/protoAccount"
+        },
+        "accessToken": {
+          "type": "string"
+        }
+      }
+    },
+    "protoMatchOrderResponse": {
+      "type": "object",
+      "properties": {
+        "fulfilledOrder": {
+          "$ref": "#/definitions/protoFulfilledOrder"
+        }
+      }
+    },
+    "protoPaymentCoin": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN_COIN",
+        "SUI"
+      ],
+      "default": "UNKNOWN_COIN"
+    },
+    "protoPaymentEnvironment": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN_ENVIRONMENT",
+        "MAINNET",
+        "DEVNET",
+        "TESTNET"
+      ],
+      "default": "UNKNOWN_ENVIRONMENT"
+    },
+    "protoPaymentMethod": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "coin": {
+          "$ref": "#/definitions/protoPaymentCoin"
+        },
+        "environment": {
+          "$ref": "#/definitions/protoPaymentEnvironment"
+        },
+        "address": {
+          "type": "string"
+        }
+      }
+    },
+    "protoPingResponse": {
+      "type": "object",
+      "properties": {
+        "pong": {
+          "type": "string"
+        }
+      }
+    },
+    "protoProductTokenPolicy": {
+      "type": "object",
+      "properties": {
+        "unitPrice": {
+          "type": "string",
+          "format": "int64",
+          "title": "TokenPolicyType token_policy_type = 1;"
+        }
+      }
+    },
+    "protoPruneAccountsRequest": {
+      "type": "object"
+    },
+    "protoPruneAccountsResponse": {
+      "type": "object",
+      "properties": {
+        "accounts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protoAccount"
+          }
+        }
+      }
+    },
+    "protoSellOrder": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "sellerId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "serviceId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "askPrice": {
+          "type": "string",
+          "format": "int64"
+        },
+        "quantity": {
+          "type": "string",
+          "format": "int64"
+        },
+        "orderExpireTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "serviceExpireTime": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "protoService": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "productTokenPolicy": {
+          "$ref": "#/definitions/protoProductTokenPolicy"
+        },
+        "globalId": {
+          "type": "string"
+        },
+        "displayName": {
+          "type": "string"
+        }
+      }
+    },
+    "protoSuiDepositProof": {
+      "type": "object",
+      "properties": {
+        "chainDigest": {
+          "type": "string"
+        },
+        "startTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "challenge": {
+          "type": "string",
+          "format": "byte"
+        },
+        "signature": {
+          "type": "string"
+        }
+      }
+    },
+    "protoWithdrawal": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "addressTo": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string",
+          "format": "int64"
+        },
+        "priorityFee": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

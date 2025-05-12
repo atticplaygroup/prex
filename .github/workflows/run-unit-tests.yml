@@ -1,0 +1,55 @@
+name: Unit Tests
+on:
+  - push
+  - pull_request
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: 'true'
+
+      - name: Set env
+        run: cat .env.example > $GITHUB_ENV
+
+      - name: Set writable GOPATH
+        run: |
+          mkdir -p /tmp/go
+          echo "GOPATH=/tmp/go" >> $GITHUB_ENV
+          echo "GOCACHE=/tmp/go/cache" >> $GITHUB_ENV
+          echo "PATH=/tmp/go/bin:$PATH" >> $GITHUB_ENV
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2 
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build devcontainer
+        uses: devcontainers/ci@v0.3
+        with:
+          imageName: ghcr.io/atticplaygroup/prex-devcontainer
+          cacheFrom: ghcr.io/atticplaygroup/prex-devcontainer
+          runCmd: |
+            echo "Building the devcontainer"          
+
+      - name: Run unit tests
+        uses: devcontainers/ci@v0.3
+        with:
+          imageName: ghcr.io/atticplaygroup/prex-devcontainer
+          cacheFrom: ghcr.io/atticplaygroup/prex-devcontainer
+          runCmd: |
+            cp .env.example .env
+            go run github.com/onsi/ginkgo/v2/ginkgo internal/auth
+            go run github.com/onsi/ginkgo/v2/ginkgo internal/store
+            go run github.com/onsi/ginkgo/v2/ginkgo internal/payment
+          env: |
+            GOPATH=/home/vscode/go
+            GOMODCACHE=/home/vscode/go/pkg/mod
+            PATH=/workspaces/prex/bin:/workspaces/prex/scripts:/usr/local/go/bin:/usr/local/go/bin:/usr/local/bin:/usr/bin:/bin:/home/vscode/.local/bin:/usr/local/sbin:/usr/sbin:/sbin:/bin:/usr/lib/postgresql/17/bin:/go/bin

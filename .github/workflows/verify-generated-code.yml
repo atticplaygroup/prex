@@ -1,0 +1,41 @@
+name: Generated Code Checking
+on:
+  - push
+  - pull_request
+
+jobs:
+  verify-gencode:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: 'true'
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.24.1"
+
+      - name: Install protoc
+        uses: arduino/setup-protoc@v3
+        with:
+          version: "21.12"
+
+      - name: Install sqlc
+        uses: sqlc-dev/setup-sqlc@v4
+        with:
+          sqlc-version: '1.29.0'
+
+      - name: Install protoc plugins
+        run: |
+          go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@v2.26.3
+          go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.6
+          go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.5.1
+
+      - name: Verify generated code
+        run: |
+          mkdir -p pkg/proto/gen/go pkg/proto/gen/openapi
+          go generate ./...
+          sqlc diff
+          git diff --exit-code
+

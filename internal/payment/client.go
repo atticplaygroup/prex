@@ -35,13 +35,13 @@ func NewSuiPaymentClient(network string, walletSigner *signer.Signer) (*SuiPayme
 		clientUrl = "http://127.0.0.1:9000"
 		graphqlClientUrl = "http://127.0.0.1:9125"
 	case "mainnet":
-		clientUrl = "https://sui-mainnet.mystenlabs.com"
+		clientUrl = "https://fullnode.mainnet.sui.io"
 		graphqlClientUrl = "https://sui-mainnet.mystenlabs.com/graphql"
 	case "testnet":
-		clientUrl = "https://sui-testnet.mystenlabs.com"
+		clientUrl = "https://fullnode.testnet.sui.io"
 		graphqlClientUrl = "https://sui-testnet.mystenlabs.com/graphql"
 	case "devnet":
-		clientUrl = "https://sui-devnet.mystenlabs.com"
+		clientUrl = "https://fullnode.devnet.sui.io"
 		graphqlClientUrl = "https://sui-devnet.mystenlabs.com/graphql"
 	default:
 		return nil, fmt.Errorf("unknown network %s", network)
@@ -241,3 +241,4 @@ func (c *SuiPaymentClient) CheckDeposit(ctx context.Context, digest string, maxG
 	}
 	return nil, fmt.Errorf("no valid transaction found")
 }
+
