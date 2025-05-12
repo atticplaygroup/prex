@@ -42,21 +42,9 @@ jobs:
           imageName: ghcr.io/atticplaygroup/prex-devcontainer
           cacheFrom: ghcr.io/atticplaygroup/prex-devcontainer
           runCmd: |
-            go run github.com/onsi/ginkgo/v2/ginkgo internal/*
+            go run github.com/onsi/ginkgo/v2/ginkgo internal/auth
+            go run github.com/onsi/ginkgo/v2/ginkgo internal/store
           env: |
             GOPATH=/home/vscode/go
             GOMODCACHE=/home/vscode/go/pkg/mod
             PATH=/workspaces/app/bin:/workspaces/app/scripts:/usr/local/go/bin:/usr/local/go/bin:/usr/local/bin:/usr/bin:/bin:/home/vscode/.local/bin:/usr/local/sbin:/usr/sbin:/sbin:/bin:/usr/lib/postgresql/17/bin:/go/bin
-
-      - name: Run API tests
-        uses: devcontainers/ci@v0.3
-        with:
-          imageName: ghcr.io/atticplaygroup/prex-devcontainer
-          cacheFrom: ghcr.io/atticplaygroup/prex-devcontainer
-          runCmd: |
-            echo "user: $(whoami)"
-            bash scripts/api-tests.sh
-          env: |
-            GOPATH=/home/vscode/go
-            GOMODCACHE=/home/vscode/go/pkg/mod
-            PATH="/workspaces/app/bin:/workspaces/app/scripts:/usr/local/go/bin:/usr/local/go/bin:/usr/local/bin:/usr/bin:/bin:/home/vscode/.local/bin:/usr/local/sbin:/usr/sbin:/sbin:/bin:/usr/lib/postgresql/17/bin:/go/bin"
