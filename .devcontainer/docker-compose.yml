@@ -7,16 +7,16 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - PATH=/go/bin:/workspaces/app/bin:/workspaces/app/scripts:${PATH}
+      - PATH=/go/bin:/workspaces/prex/bin:/workspaces/prex/scripts:${PATH}
       - GOPATH=/go
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     ports:
       - 8000:8000
     volumes:
-      - ..:/workspaces/app:consistent
+      - ..:/workspaces/prex:consistent
     command: sleep infinity
-    working_dir: /workspaces/app
+    working_dir: /workspaces/prex
 
   db:
     image: postgres:latest
