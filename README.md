@@ -16,7 +16,7 @@ Read more in the [documentation](https://github.com/atticplaygroup/prex/wiki/Hom
 ## Installation
 
 ```bash
-go install github.com/atticplaygroup/prex
+go install github.com/atticplaygroup/prex@latest
 ```
 
 ## Usage
