@@ -1,4 +1,4 @@
-name: Run Tests
+name: Run API Tests
 on:
   - push
   - pull_request
@@ -46,6 +46,7 @@ jobs:
           cacheFrom: ghcr.io/atticplaygroup/prex-devcontainer
           runCmd: |
             cp .env.example .env
+            make build
             bash scripts/api-tests.sh
           env: |
             GOPATH=/home/vscode/go
