@@ -29,6 +29,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build devcontainer
+        uses: devcontainers/ci@v0.3
         with:
           imageName: ghcr.io/atticplaygroup/prex-devcontainer
           runCmd: |
