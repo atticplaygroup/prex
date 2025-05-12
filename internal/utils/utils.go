@@ -212,9 +212,11 @@ func ParsePagination(req IPagination) (*Pagination, error) {
 func GetSuiFaucetHost(network string) string {
 	switch network {
 	case "devnet":
-		return "https://faucet.devnet.sui.io"
+		return "https://faucet.devnet.sui.io/v2/gas"
 	case "testnet":
-		return "https://faucet.testnet.sui.io"
+		return "https://faucet.testnet.sui.io/v2/gas"
+	case "mainnet":
+		return "https://faucet.mainnet.sui.io/v2/gas"
 	case "localnet":
 		return "http://127.0.0.1:9123"
 	default:
