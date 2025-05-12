@@ -16,10 +16,10 @@ jobs:
 
       - name: Set writable GOPATH
         run: |
-          mkdir -p $HOME/go
-          echo "GOPATH=$HOME/go" >> $GITHUB_ENV
-          echo "GOCACHE=$HOME/go/cache" >> $GITHUB_ENV
-          echo "PATH=$HOME/go/bin:$PATH" >> $GITHUB_ENV
+          mkdir -p /tmp/go
+          echo "GOPATH=/tmp/go" >> $GITHUB_ENV
+          echo "GOCACHE=/tmp/go/cache" >> $GITHUB_ENV
+          echo "PATH=/tmp/go/bin:$PATH" >> $GITHUB_ENV
 
       - name: Run unit tests
         uses: devcontainers/ci@v0.3
