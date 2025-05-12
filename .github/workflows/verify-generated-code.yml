@@ -1,4 +1,4 @@
-name: Verify Generated Code
+name: Generated Code Checking
 on:
   - push
   - pull_request
