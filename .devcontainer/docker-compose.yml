@@ -8,7 +8,7 @@ services:
       dockerfile: Dockerfile
     environment:
       - PATH=/go/bin:/workspaces/prex/bin:/workspaces/prex/scripts:${PATH}
-      - GOPATH=/go
+      - GOPATH=${HOME}/go
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     ports:
