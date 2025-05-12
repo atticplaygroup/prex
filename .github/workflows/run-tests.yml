@@ -53,3 +53,16 @@ jobs:
             GOPATH=/home/vscode/go
             GOMODCACHE=/home/vscode/go/pkg/mod
             PATH=/workspaces/prex/bin:/workspaces/prex/scripts:/usr/local/go/bin:/usr/local/go/bin:/usr/local/bin:/usr/bin:/bin:/home/vscode/.local/bin:/usr/local/sbin:/usr/sbin:/sbin:/bin:/usr/lib/postgresql/17/bin:/go/bin
+
+      - name: Run API tests
+        uses: devcontainers/ci@v0.3
+        with:
+          imageName: ghcr.io/atticplaygroup/prex-devcontainer
+          cacheFrom: ghcr.io/atticplaygroup/prex-devcontainer
+          runCmd: |
+            cp .env.example .env
+            bash scripts/api-tests.sh
+          env: |
+            GOPATH=/home/vscode/go
+            GOMODCACHE=/home/vscode/go/pkg/mod
+            PATH=/workspaces/prex/bin:/workspaces/prex/scripts:/usr/local/go/bin:/usr/local/go/bin:/usr/local/bin:/usr/bin:/bin:/home/vscode/.local/bin:/usr/local/sbin:/usr/sbin:/sbin:/bin:/usr/lib/postgresql/17/bin:/go/bin

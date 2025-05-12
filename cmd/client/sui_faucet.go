@@ -4,7 +4,6 @@ import (
 	"log"
 
 	"github.com/atticplaygroup/prex/internal/utils"
-	"github.com/block-vision/sui-go-sdk/sui"
 	"github.com/spf13/cobra"
 )
 
@@ -16,14 +15,8 @@ var faucetCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("cannot get network: %v", err)
 		}
-		faucetHost := utils.GetSuiFaucetHost(network)
 		recipient := conf.Account.KeyPair.Address
-		_, err = sui.GetFaucetHost(network)
-		if err != nil {
-			log.Fatalf("get faucet host failed: %v", err)
-		}
-		header := map[string]string{}
-		err = sui.RequestSuiFromFaucet(faucetHost, recipient, header)
+		err = utils.RequestSuiFromFaucet(network, recipient)
 		if err != nil {
 			log.Fatalf("request faucet failed: %v", err)
 		}
