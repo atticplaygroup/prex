@@ -42,6 +42,7 @@ jobs:
           imageName: ghcr.io/atticplaygroup/prex-devcontainer
           cacheFrom: ghcr.io/atticplaygroup/prex-devcontainer
           runCmd: |
+            cp .env.example .env
             go run github.com/onsi/ginkgo/v2/ginkgo internal/auth
             go run github.com/onsi/ginkgo/v2/ginkgo internal/store
           env: |
