@@ -13,6 +13,12 @@ Prex (PAID Request EXchange) facilitates the matching of client requests with [P
 
 Read more in the [documentation](https://github.com/atticplaygroup/prex/wiki/Home#what-is-prex).
 
+PAID service examples include:
+
+| Service | Description |
+| - | - |
+| [Pkv](https://github.com/atticplaygroup/pkv) | Key-Value Storage |
+
 ## Installation
 
 ```bash
