@@ -12,6 +12,7 @@ import (
 
 	"github.com/atticplaygroup/prex/cmd"
 	"github.com/block-vision/sui-go-sdk/signer"
+	"github.com/mr-tron/base58"
 	"github.com/spf13/cobra"
 	"github.com/tyler-smith/go-bip39"
 )
@@ -68,10 +69,10 @@ func parseConfig(config *Config) (*ParsedConfig, error) {
 	if err != nil {
 		return nil, err
 	}
-	username, err := deriveFromMnemonic(config.Account.Mnemonic, "username")
-	if err != nil {
-		return nil, fmt.Errorf("cannot deriver username: %v", err)
-	}
+	keypair := signer.NewSigner(derivedSeed.Key)
+	buf := []byte{0xed, 0x01}
+	buf = append(buf, []byte(keypair.PubKey)...)
+	username := fmt.Sprintf("did:key:z%s", base58.Encode(buf))
 	password, err := deriveFromMnemonic(config.Account.Mnemonic, "password")
 	if err != nil {
 		return nil, fmt.Errorf("cannot deriver password: %v", err)
@@ -80,7 +81,7 @@ func parseConfig(config *Config) (*ParsedConfig, error) {
 		Account: ParsedAccount{
 			Mnemonic:   config.Account.Mnemonic,
 			SecretSeed: derivedSeed.Key,
-			KeyPair:    signer.NewSigner(derivedSeed.Key),
+			KeyPair:    keypair,
 			Username:   username,
 			Password:   password,
 		},

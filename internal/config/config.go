@@ -2,14 +2,16 @@ package config
 
 import (
 	"crypto/ed25519"
+	"fmt"
 	"log"
 	"path/filepath"
 	"time"
 
+	"github.com/mr-tron/base58"
+
 	"github.com/atticplaygroup/prex/internal/utils"
 	"github.com/block-vision/sui-go-sdk/signer"
 	"github.com/spf13/viper"
-	"golang.org/x/crypto/blake2b"
 )
 
 type Config struct {
@@ -37,12 +39,12 @@ type Config struct {
 	SessionTimeout     time.Duration `mapstructure:"SESSION_TIMEOUT"`
 
 	FreeQuotaRefreshPeriod time.Duration `mapstructure:"FREE_QUOTA_REFRESH_PERIOD"`
-	SoldQuotaMaxTtl        time.Duration `mapstructure:"SOLD_QUOTA_MAX_TTL"`
+	TokenTtl               time.Duration `mapstructure:"TOKEN_TTL"`
 
 	RedisHost string `mapstructure:"redis_host"`
 	RedisPort uint16 `mapstructure:"redis_port"`
 
-	ServiceGrpcPort uint16 `mapstructure:"SERVICE_GRPC_PORT"`
+	PrexGrpcPort uint16 `mapstructure:"PREX_GRPC_PORT"`
 
 	EnablePrexQuotaLimiter             bool `mapstructure:"ENABLE_PREX_QUOTA_LIMITER"`
 	EnableServiceRegistrationWhitelist bool `mapstructure:"ENABLE_SERVICE_REGISTRATION_WHITELIST"`
@@ -70,8 +72,10 @@ func LoadConfig(path string) (config Config) {
 		log.Fatalf("expect seed to have len %d but got %d: %v", ed25519.SeedSize, len(seed), seed)
 	}
 	config.TokenSigningPrivateKey = ed25519.NewKeyFromSeed(seed)
-	keyHash := blake2b.Sum256(ed25519.NewKeyFromSeed(seed).Public().(ed25519.PublicKey))
-	config.TokenSigningKeyId = utils.BytesToHexWithPrefix(keyHash[:])
+	buf := []byte{0xed, 0x01}
+	buf = append(buf, []byte(config.TokenSigningPrivateKey.Public().(ed25519.PublicKey))...)
+	config.TokenSigningKeyId = fmt.Sprintf("did:key:z%s", base58.Encode(buf))
+	fmt.Printf("did: %s\n", config.TokenSigningKeyId)
 
 	signer, err := signer.NewSignertWithMnemonic(config.WalletMnemonic)
 	if err != nil {

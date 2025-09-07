@@ -4,14 +4,16 @@ import (
 	"context"
 	"database/sql"
 
+	"connectrpc.com/connect"
 	"github.com/atticplaygroup/prex/internal/utils"
-	pb "github.com/atticplaygroup/prex/pkg/proto/gen/go/exchange"
+	pb "github.com/atticplaygroup/prex/pkg/proto/gen/go/exchange/v1"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-func (s *Server) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
+func (s *Server) Login(ctx context.Context, connectReq *connect.Request[pb.LoginRequest]) (*connect.Response[pb.LoginResponse], error) {
+	req := connectReq.Msg
 	account, err := s.store.GetAccount(ctx, req.GetUsername())
 	if err != nil {
 		if err == sql.ErrNoRows || err.Error() == "no rows in result set" {
@@ -43,8 +45,8 @@ func (s *Server) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResp
 		)
 	}
 	accountResponse := utils.FormatAccount(account)
-	return &pb.LoginResponse{
+	return connect.NewResponse(&pb.LoginResponse{
 		AccessToken: jwt,
 		Account:     &accountResponse,
-	}, nil
+	}), nil
 }

@@ -30,7 +30,7 @@ query GetTransactionDetails($sentAddress: String!) {
   }
 }'
 sleep 5 # Wait for the transaction to finalize
-CHAIN_DIGEST=$(curl -s -X POST "${SUI_GRAPHQL_URL}" \
+CHAIN_DIGEST=$(curl --fail -s -X POST "${SUI_GRAPHQL_URL}" \
   --header 'x-sui-rpc-show-usage: true' \
   --header 'Content-Type: application/json' \
   --data '{
@@ -73,4 +73,4 @@ BODY='{
   }
 }'
 echo "${BODY}"
-curl -s -X POST http://localhost:3000/v1/deposit -d "${BODY}"
+curl --fail -s -X POST http://localhost:3000/v1/deposit -d "${BODY}"

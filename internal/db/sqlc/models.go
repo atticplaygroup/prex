@@ -18,43 +18,11 @@ type Account struct {
 	Privilege  string             `json:"privilege"`
 }
 
-type ActiveOrder struct {
-	OrderID           int64              `json:"order_id"`
-	ServiceID         int64              `json:"service_id"`
-	SellerID          int64              `json:"seller_id"`
-	AskPrice          int64              `json:"ask_price"`
-	Quantity          int64              `json:"quantity"`
-	CreateTime        pgtype.Timestamptz `json:"create_time"`
-	OrderExpireTime   pgtype.Timestamptz `json:"order_expire_time"`
-	ServiceExpireTime pgtype.Timestamptz `json:"service_expire_time"`
-}
-
-type ClaimedOrder struct {
-	OrderClaimID       int64              `json:"order_claim_id"`
-	OrderFulfillmentID int64              `json:"order_fulfillment_id"`
-	AudienceAddress    []byte             `json:"audience_address"`
-	ClaimQuantity      int64              `json:"claim_quantity"`
-	ClaimTime          pgtype.Timestamptz `json:"claim_time"`
-}
-
 type Deposit struct {
 	DepositID         int64  `json:"deposit_id"`
 	TransactionDigest string `json:"transaction_digest"`
 	Epoch             int64  `json:"epoch"`
 	AccountID         int64  `json:"account_id"`
-}
-
-type FulfilledOrder struct {
-	OrderFulfillmentID int64              `json:"order_fulfillment_id"`
-	ServiceID          int64              `json:"service_id"`
-	OrderID            int64              `json:"order_id"`
-	BuyerID            int64              `json:"buyer_id"`
-	SellerID           int64              `json:"seller_id"`
-	DealPrice          int64              `json:"deal_price"`
-	DealQuantity       int64              `json:"deal_quantity"`
-	DealTime           pgtype.Timestamptz `json:"deal_time"`
-	RemainingQuantity  int64              `json:"remaining_quantity"`
-	ServiceExpireTime  pgtype.Timestamptz `json:"service_expire_time"`
 }
 
 type ProcessingWithdrawal struct {
@@ -64,14 +32,6 @@ type ProcessingWithdrawal struct {
 	TotalPriorityFee       int64              `json:"total_priority_fee"`
 	WithdrawalStatus       string             `json:"withdrawal_status"`
 	CreateTime             pgtype.Timestamptz `json:"create_time"`
-}
-
-type Service struct {
-	ServiceID         int64       `json:"service_id"`
-	ServiceGlobalID   pgtype.UUID `json:"service_global_id"`
-	DisplayName       string      `json:"display_name"`
-	TokenPolicyConfig string      `json:"token_policy_config"`
-	TokenPolicyType   string      `json:"token_policy_type"`
 }
 
 type Withdrawal struct {

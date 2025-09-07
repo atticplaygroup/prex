@@ -7,18 +7,22 @@ import (
 	"log/slog"
 	"sync"
 
+	"connectrpc.com/connect"
 	db "github.com/atticplaygroup/prex/internal/db/sqlc"
 	"github.com/atticplaygroup/prex/internal/payment"
 	"github.com/atticplaygroup/prex/internal/store"
 	"github.com/atticplaygroup/prex/internal/utils"
-	pb "github.com/atticplaygroup/prex/pkg/proto/gen/go/exchange"
+	pb "github.com/atticplaygroup/prex/pkg/proto/gen/go/exchange/v1"
 	"github.com/block-vision/sui-go-sdk/models"
 	"github.com/jackc/pgx/v5/pgtype"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-func (s *Server) CreateWithdraw(ctx context.Context, req *pb.CreateWithdrawRequest) (*pb.Withdrawal, error) {
+func (s *Server) CreateWithdraw(
+	ctx context.Context, connectReq *connect.Request[pb.CreateWithdrawRequest],
+) (*connect.Response[pb.CreateWithdrawResponse], error) {
+	req := connectReq.Msg
 	// TODO: change priority fee mechanism to second price
 	chainAddressBytes, err := hex.DecodeString(req.GetWithdrawal().AddressTo[2:])
 	if err != nil || len(chainAddressBytes) != 32 {
@@ -28,17 +32,13 @@ func (s *Server) CreateWithdraw(ctx context.Context, req *pb.CreateWithdrawReque
 			err,
 		)
 	}
-	idSegments, err := utils.ParseResourceName(
-		req.GetParent(), []string{"accounts"},
-	)
-	if err != nil || len(idSegments) != 1 {
+	accountId, ok := ctx.Value(utils.KEY_ACCOUNT_ID).(int64)
+	if !ok {
 		return nil, status.Errorf(
-			codes.InvalidArgument,
-			"failed to parse resource name: %v",
-			err,
+			codes.PermissionDenied,
+			"failed to get account id",
 		)
 	}
-	accountId := idSegments[0]
 	withdrawal, err := s.store.WithdrawTx(ctx, store.WithdrawTxParams{
 		WithdrawAll: req.GetWithdrawAll(),
 		StartWithdrawalParams: db.StartWithdrawalParams{
@@ -54,18 +54,21 @@ func (s *Server) CreateWithdraw(ctx context.Context, req *pb.CreateWithdrawReque
 			"failed to execute withdrawTx",
 		)
 	}
-	return &pb.Withdrawal{
-		Name:        fmt.Sprintf(utils.RESOURCE_PATTERN_WITHDRAW, accountId, withdrawal.WithdrawalID),
-		AddressTo:   req.GetWithdrawal().GetAddressTo(),
-		Amount:      withdrawal.Amount,
-		PriorityFee: withdrawal.PriorityFee,
-	}, nil
+	return connect.NewResponse(&pb.CreateWithdrawResponse{
+		Withdrawal: &pb.Withdrawal{
+			Name:        fmt.Sprintf(utils.RESOURCE_PATTERN_WITHDRAW, accountId, withdrawal.WithdrawalID),
+			AddressTo:   req.GetWithdrawal().GetAddressTo(),
+			Amount:      withdrawal.Amount,
+			PriorityFee: withdrawal.PriorityFee,
+		},
+	}), nil
 }
 
 func (s *Server) BatchProcessWithdraws(
 	ctx context.Context,
-	req *pb.BatchProcessWithdrawsRequest,
-) (*pb.BatchProcessWithdrawsResponse, error) {
+	connectReq *connect.Request[pb.BatchProcessWithdrawsRequest],
+) (*connect.Response[pb.BatchProcessWithdrawsResponse], error) {
+	req := connectReq.Msg
 	if req.GetLimit() > s.config.WithdrawRecipientCount || req.GetLimit() <= 0 {
 		return nil, status.Errorf(
 			codes.InvalidArgument,
@@ -93,9 +96,9 @@ func (s *Server) BatchProcessWithdraws(
 		)
 	}
 	if len(withdrawals) == 0 {
-		return &pb.BatchProcessWithdrawsResponse{
+		return connect.NewResponse(&pb.BatchProcessWithdrawsResponse{
 			BatchSize: 0,
-		}, nil
+		}), nil
 	}
 
 	transferInfo := make([]payment.TransferInfo, 0)
@@ -152,13 +155,14 @@ func (s *Server) BatchProcessWithdraws(
 			err,
 		)
 	}
-	return &pb.BatchProcessWithdrawsResponse{Digest: digest}, nil
+	return connect.NewResponse(&pb.BatchProcessWithdrawsResponse{Digest: digest}), nil
 }
 
 func (s *Server) BatchMarkWithdraws(
 	ctx context.Context,
-	req *pb.BatchMarkWithdrawsRequest,
-) (*pb.BatchMarkWithdrawsResponse, error) {
+	connectReq *connect.Request[pb.BatchMarkWithdrawsRequest],
+) (*connect.Response[pb.BatchMarkWithdrawsResponse], error) {
+	req := connectReq.Msg
 	if req.GetLimit() > s.config.WithdrawCheckStatusCount || req.GetLimit() <= 0 {
 		return nil, status.Errorf(
 			codes.InvalidArgument,
@@ -232,7 +236,7 @@ func (s *Server) BatchMarkWithdraws(
 	for id := range successChan {
 		successIds = append(successIds, id)
 	}
-	return &pb.BatchMarkWithdrawsResponse{
+	return connect.NewResponse(&pb.BatchMarkWithdrawsResponse{
 		SuccessWithdrawIds: successIds,
-	}, nil
+	}), nil
 }

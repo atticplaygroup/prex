@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/hex"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -15,7 +14,7 @@ import (
 	"time"
 
 	db "github.com/atticplaygroup/prex/internal/db/sqlc"
-	pb "github.com/atticplaygroup/prex/pkg/proto/gen/go/exchange"
+	pb "github.com/atticplaygroup/prex/pkg/proto/gen/go/exchange/v1"
 	"github.com/block-vision/sui-go-sdk/models"
 	"github.com/google/uuid"
 	"github.com/ssoready/hyrumtoken"
@@ -270,12 +269,12 @@ func RequestSuiFromFaucet(network, recipientAddress string) error {
 func faucetRequest(faucetUrl string, body interface{}, headers map[string]string) error {
 	jsonBody, err := json.Marshal(body)
 	if err != nil {
-		return errors.New(fmt.Sprintf("Marshal request body error: %s", err.Error()))
+		return fmt.Errorf("marshal request body error: %s", err.Error())
 	}
 
 	req, err := http.NewRequest(http.MethodPost, faucetUrl, bytes.NewBuffer(jsonBody))
 	if err != nil {
-		return errors.New(fmt.Sprintf("Create request error: %s", err.Error()))
+		return fmt.Errorf("create request error: %s", err.Error())
 	}
 
 	req.Header.Set("Content-Type", "application/json")
@@ -287,20 +286,19 @@ func faucetRequest(faucetUrl string, body interface{}, headers map[string]string
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return errors.New(fmt.Sprintf("Request faucet error: %s", err.Error()))
+		return fmt.Errorf("request faucet error: %s", err.Error())
 	}
 
 	defer resp.Body.Close()
 
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return errors.New(fmt.Sprintf("Read response body error: %s", err.Error()))
+		return fmt.Errorf("read response body error: %s", err.Error())
 	}
 
 	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusAccepted {
-		return errors.New(fmt.Sprintf("Request faucet failed, statusCode: %d, err: %+v", resp.StatusCode, string(bodyBytes)))
+		return fmt.Errorf("request faucet failed, statusCode: %d, err: %+v", resp.StatusCode, string(bodyBytes))
 	}
 
 	return nil
 }
-

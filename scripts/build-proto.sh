@@ -11,4 +11,4 @@ protoc -I ./pkg/proto \
     --grpc-gateway_opt=paths=source_relative \
     --openapiv2_out ./pkg/proto/gen/openapi \
     --openapiv2_opt use_go_templates=true \
-    ./pkg/proto/exchange/exchange.proto
+    ./pkg/proto/exchange/v1/exchange.proto

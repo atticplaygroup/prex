@@ -1,0 +1,338 @@
+syntax = "proto3";
+
+option go_package = "github.com/atticplaygroup/prex/pkg/proto/gen/go/exchange/v1;exchange";
+
+import "google/api/annotations.proto";
+import "google/api/client.proto";
+import "google/api/resource.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+import "buf/validate/validate.proto";
+
+package exchange.v1;
+
+service ExchangeService {
+  rpc Login(LoginRequest) returns (LoginResponse) {
+    option (google.api.http) = {
+      post: "/v1/login"
+      body: "*"
+    };
+  }
+
+  rpc GetChallenge(GetChallengeRequest) returns (GetChallengeResponse) {
+    option (google.api.http) = {
+      get: "/v1/challenge"
+    };
+    option (google.api.method_signature) = "address";
+  }
+
+  rpc Deposit(DepositRequest) returns (DepositResponse) {
+    option (google.api.http) = {
+      post: "/v1/deposit"
+      body: "*"
+    };
+  }
+
+  rpc PruneAccounts(PruneAccountsRequest) returns (PruneAccountsResponse) {
+    option (google.api.http) = {
+      post: "/v1/accounts:prune"
+      body: "*"
+    };
+  }
+
+  rpc CreateWithdraw(CreateWithdrawRequest) returns (CreateWithdrawResponse) {
+    option (google.api.http) = {
+      post: "/v1/withdraws:create"
+      body: "withdrawal"
+    };
+    option (google.api.method_signature) = "withdrawal";
+  }
+
+  // rpc GetWithdraw(GetWithdrawRequest) returns (Withdrawal) {
+  //   option (google.api.http) = {
+  //     get: "/v1/{name=accounts/*/withdraws/*}"
+  //   };
+  //   option (google.api.method_signature) = "name";    
+  // }
+
+  // rpc CancelWithdraw(CancelWithdrawRequest) returns (google.protobuf.Empty) {
+  //   option (google.api.http) = {
+  //     post: "/v1/{name=accounts/*/withdraws/*}:cancel"
+  //     body: "*"
+  //   };
+  //   option (google.api.method_signature) = "name";
+  // }
+
+  rpc BatchProcessWithdraws(BatchProcessWithdrawsRequest) returns (BatchProcessWithdrawsResponse) {
+    option (google.api.http) = {
+      post: "/v1/withdraws:batchProcess"
+      body: "*"
+    };
+    option (google.api.method_signature) = "limit";
+  }
+
+  rpc BatchMarkWithdraws(BatchMarkWithdrawsRequest) returns (BatchMarkWithdrawsResponse) {
+    option (google.api.http) = {
+      post: "/v1/withdraws:batchMark"
+      body: "*"
+    };
+    option (google.api.method_signature) = "limit";
+  }
+
+  rpc Ping(PingRequest) returns (PingResponse) {
+    option (google.api.http) = {
+      get: "/v1/ping"
+    };
+    option (google.api.method_signature) = "";
+  }
+
+  rpc ListPaymentMethods(ListPaymentMethodsRequest) returns (ListPaymentMethodsResponse) {
+    option (google.api.http) = {
+      get: "/v1/payment-methods"
+    };
+    option (google.api.method_signature) = "";
+  }
+
+  rpc BuyToken(BuyTokenRequest) returns (BuyTokenResponse) {
+    option (google.api.http) = {
+      post: "/v1/buy-token",
+      body: "*"
+    };
+    option (google.api.method_signature) = "";
+  }
+}
+
+message BuyTokenRequest {
+  string audience = 1 [(google.api.field_behavior) = REQUIRED, (buf.validate.field).string.pattern = "did:.+"];
+  int64 amount = 2 [(google.api.field_behavior) = REQUIRED, (buf.validate.field).int64.gt = 0];
+}
+
+message BuyTokenResponse {
+  string token = 1;
+}
+
+message ListPaymentMethodsRequest {
+}
+
+message ListPaymentMethodsResponse {
+  repeated PaymentMethod payment_methods = 1;
+}
+
+enum PaymentCoin {
+  PAYMENT_COIN_UNSPECIFIED = 0;
+  PAYMENT_COIN_SUI = 1;
+}
+
+enum PaymentEnvironment {
+  PAYMENT_ENVIRONMENT_UNSPECIFIED = 0;
+  PAYMENT_ENVIRONMENT_MAINNET = 1;
+  PAYMENT_ENVIRONMENT_DEVNET  = 2;
+  PAYMENT_ENVIRONMENT_TESTNET = 3;
+  PAYMENT_ENVIRONMENT_LOCALNET = 4;
+}
+
+message PaymentMethod {
+  PaymentCoin coin = 2 [(buf.validate.field).enum.defined_only = true];
+  PaymentEnvironment environment = 3 [(buf.validate.field).enum.defined_only = true];
+  string address = 4 [(buf.validate.field).string.pattern = "0x[a-f0-9]{64}"];
+}
+
+message PingRequest {
+  // To check effectiveness of buf validation
+  int64 dummy = 1 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).int64.gt = 0
+  ];
+}
+
+message PingResponse {
+  string pong = 1;
+}
+
+message BatchMarkWithdrawsRequest {
+  int32 limit = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (buf.validate.field).int32.gt = 0
+  ];
+}
+
+message BatchMarkWithdrawsResponse {
+  repeated int64 success_withdraw_ids = 1;
+}
+
+message BatchProcessWithdrawsRequest {
+  int32 limit = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (buf.validate.field).int32.gt = 0
+  ];
+}
+
+message BatchProcessWithdrawsResponse {
+  string digest = 1 [(buf.validate.field).string.pattern = "[A-Za-z0-9]{43,44}"];
+  int64 batch_size = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (buf.validate.field).int64.gt = 0
+  ];
+}
+
+message CancelWithdrawRequest {
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (buf.validate.field).string.pattern = "accounts/[0-9]+/withdrawals/[0-9]+"
+  ];
+}
+
+message GetWithdrawRequest {
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (buf.validate.field).string.pattern = "accounts/[0-9]+/withdrawals/[0-9]+"
+  ];
+}
+
+message Withdrawal {
+  option (google.api.resource) = {
+    type: "github.com/atticplaygroup/prex/pkg/proto/exchange/v1/Withdrawal"
+    pattern: "accounts/{account}/withdrawals/{withdrawal}"
+  };
+  string name = 1 [
+    (google.api.field_behavior) = IDENTIFIER,
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "accounts/[0-9]+/withdrawals/[0-9]+"
+  ];
+  string address_to = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (buf.validate.field).string.pattern = "0x[a-f0-9]{64}"
+  ];
+  int64 amount = 3 [
+    (google.api.field_behavior) = REQUIRED,
+    (buf.validate.field).int64.gt = 0
+  ];
+  int64 priority_fee = 4 [
+    (google.api.field_behavior) = REQUIRED,
+    (buf.validate.field).int64.gt = 0
+  ];
+}
+
+message CreateWithdrawRequest {
+  Withdrawal withdrawal = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (buf.validate.field).required = true
+  ];
+  bool withdraw_all = 3;
+}
+
+message CreateWithdrawResponse {
+  Withdrawal withdrawal = 1;
+}
+
+message PruneAccountsRequest {
+}
+
+message PruneAccountsResponse {
+  repeated Account accounts = 1;
+}
+
+message SuiDepositProof {
+  string chain_digest = 1 [(buf.validate.field).string.pattern = "[A-Za-z0-9]{43,44}"];
+  google.protobuf.Timestamp start_time = 2 [(buf.validate.field).timestamp.lt_now = true];
+  bytes challenge = 3 [(buf.validate.field).bytes.len = 32];
+  string signature = 4 [(buf.validate.field).required = true];
+}
+
+message DepositRequest {
+  string username = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (buf.validate.field).string = {
+      min_len: 1
+      max_len: 64
+    },
+    (buf.validate.field).string.pattern = "did:.*"
+  ];
+  string password = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (buf.validate.field).string = {
+      min_len: 1
+      max_len: 64
+    }
+  ];
+  google.protobuf.Duration ttl = 3 [
+    (google.api.field_behavior) = REQUIRED,
+    (buf.validate.field).duration.lte = {
+      seconds: 2592000
+    }
+  ];
+  SuiDepositProof proof = 4 [
+    (google.api.field_behavior) = REQUIRED,
+    (buf.validate.field).required = true
+  ];
+}
+
+message DepositResponse {
+  Account account = 1;
+}
+
+message GetChallengeRequest {
+  string address = 1 [(buf.validate.field).string.pattern = "0x[a-f0-9]{64}"];
+}
+
+message GetChallengeResponse {
+  bytes challenge = 1 [(buf.validate.field).bytes.len = 32];
+  google.protobuf.Timestamp start_time = 2;
+}
+
+message Account {
+  option (google.api.resource) = {
+    type: "github.com/atticplaygroup/prex/pkg/proto/exchange/v1/Account"
+    pattern: "accounts/{account}"
+  };
+  string name = 1 [
+    (google.api.field_behavior) = IDENTIFIER,
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "accounts/[0-9]+"
+  ];
+  int64 account_id = 2 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).int64.gt = 0
+  ];
+  string username = 3 [
+    (google.api.field_behavior) = REQUIRED,
+    (buf.validate.field).string.len = 32
+  ];
+  google.protobuf.Timestamp expire_time = 4 [
+    (google.api.field_behavior) = REQUIRED,
+    (buf.validate.field).timestamp.gt_now = true
+  ];
+  int64 balance = 5 [
+    (google.api.field_behavior) = REQUIRED,
+    (buf.validate.field).int64.gt = 0
+  ];
+}
+
+message LoginRequest {
+  string username = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (buf.validate.field).string = {
+      min_len: 1
+      max_len: 64
+    }
+  ];
+  string password = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (buf.validate.field).string = {
+      min_len: 1
+      max_len: 64
+    }
+  ];
+}
+
+message LoginResponse {
+  Account account = 1;
+  string access_token = 2;
+}
+
+enum JwtUsage {
+  JWT_USAGE_UNSPECIFIED = 0;
+  JWT_USAGE_CREATE_SESSION = 1;
+  JWT_USAGE_MANAGE_SESSION = 2;
+}

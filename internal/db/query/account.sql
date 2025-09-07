@@ -29,6 +29,14 @@ WHERE account_id = @account_id
 RETURNING *
 ;
 
+-- name: ChangeBalanceByUsername :one
+UPDATE accounts
+SET balance = balance + @balance_change
+-- TODO: add a new column of did and use it as audiance to search
+WHERE username = @username
+RETURNING *
+;
+
 -- name: GetAccount :one
 SELECT
   *

@@ -35,6 +35,8 @@ MY_SUI_ADDRESS=$(prex client account | jq -r .address)
 
 COIN_ADDRESS=$(get_coin_address)
 
+echo "Using ${SUI_NETWORK}"
+
 [ -n "${COIN_ADDRESS}" ] || prex client sui-faucet \
   --network=${SUI_NETWORK}
 
@@ -47,8 +49,10 @@ COIN_ADDRESS=$(get_coin_address)
   exit 1
 )
 
+SUI_NETWORK_ENV=PAYMENT_ENVIRONMENT_$(echo ${SUI_NETWORK} | tr '[:lower:]' '[:upper:]')
+
 PAYMENT_ADDRESS=$(curl -s http://localhost:3000/v1/payment-methods | \
-  jq -r '.paymentMethods[] | select(.environment=="DEVNET") .address')
+  jq -r '.paymentMethods[] | select(.environment=="'"${SUI_NETWORK_ENV}"'") .address')
 [ -z ${PAYMENT_ADDRESS} ] || [ ${PAYMENT_ADDRESS} = "null" ] && (
   echo "failed to get payment address"
   exit 1

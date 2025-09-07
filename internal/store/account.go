@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	db "github.com/atticplaygroup/prex/internal/db/sqlc"
+	pb "github.com/atticplaygroup/prex/pkg/proto/gen/go/exchange/v1"
 )
 
 type UpsertAccountTxParams struct {
@@ -50,4 +51,33 @@ func (s *Store) UpsertAccountTx(ctx context.Context, arg *UpsertAccountTxParams)
 		return nil, err
 	}
 	return account, nil
+}
+
+type BuyTokenTxParams struct {
+	Req     *pb.BuyTokenRequest
+	BuyerID int64
+}
+
+func (s *Store) BuyTokenTx(
+	ctx context.Context,
+	qtx *db.Queries,
+	arg *BuyTokenTxParams,
+) (*db.Account, error) {
+
+	account, err := qtx.ChangeBalance(ctx, db.ChangeBalanceParams{
+		AccountID:     arg.BuyerID,
+		BalanceChange: arg.Req.GetAmount(),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = qtx.ChangeBalanceByUsername(ctx, db.ChangeBalanceByUsernameParams{
+		Username:      arg.Req.GetAudience(),
+		BalanceChange: -arg.Req.GetAmount(),
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &account, nil
 }

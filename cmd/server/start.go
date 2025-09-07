@@ -9,7 +9,7 @@ import (
 	"github.com/atticplaygroup/prex/internal/api"
 	"github.com/atticplaygroup/prex/internal/config"
 	"github.com/atticplaygroup/prex/internal/store"
-	pb "github.com/atticplaygroup/prex/pkg/proto/gen/go/exchange"
+	pb "github.com/atticplaygroup/prex/pkg/proto/gen/go/exchange/v1"
 	"github.com/jackc/pgx/v5"
 	"github.com/spf13/cobra"
 )
@@ -24,7 +24,7 @@ var startCmd = &cobra.Command{
 		}
 		conf := config.LoadConfig(envPath)
 		log.Printf("conf: %+v", conf)
-		l, err := net.Listen("tcp", fmt.Sprintf("127.0.0.1:%d", conf.ServiceGrpcPort))
+		l, err := net.Listen("tcp", fmt.Sprintf("127.0.0.1:%d", conf.PrexGrpcPort))
 		if err != nil {
 			log.Fatalf("failed to listen port: %v\n", err)
 		}
@@ -46,7 +46,7 @@ var startCmd = &cobra.Command{
 		}
 
 		s := api.NewGrpcServer(server)
-		pb.RegisterExchangeServer(s, server)
+		pb.RegisterExchangeServiceServer(s, server.ExchangeServiceServer)
 		go func() {
 			defer s.GracefulStop()
 			<-ctx.Done()

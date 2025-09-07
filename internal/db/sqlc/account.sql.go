@@ -67,6 +67,33 @@ func (q *Queries) ChangeBalance(ctx context.Context, arg ChangeBalanceParams) (A
 	return i, err
 }
 
+const changeBalanceByUsername = `-- name: ChangeBalanceByUsername :one
+UPDATE accounts
+SET balance = balance + $1
+WHERE username = $2
+RETURNING account_id, username, password, balance, create_time, expire_time, privilege
+`
+
+type ChangeBalanceByUsernameParams struct {
+	BalanceChange int64  `json:"balance_change"`
+	Username      string `json:"username"`
+}
+
+func (q *Queries) ChangeBalanceByUsername(ctx context.Context, arg ChangeBalanceByUsernameParams) (Account, error) {
+	row := q.db.QueryRow(ctx, changeBalanceByUsername, arg.BalanceChange, arg.Username)
+	var i Account
+	err := row.Scan(
+		&i.AccountID,
+		&i.Username,
+		&i.Password,
+		&i.Balance,
+		&i.CreateTime,
+		&i.ExpireTime,
+		&i.Privilege,
+	)
+	return i, err
+}
+
 const deleteInvalidAccounts = `-- name: DeleteInvalidAccounts :many
 DELETE FROM accounts
 WHERE

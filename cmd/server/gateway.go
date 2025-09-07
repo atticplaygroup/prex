@@ -8,7 +8,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	pb "github.com/atticplaygroup/prex/pkg/proto/gen/go/exchange"
+	pb "github.com/atticplaygroup/prex/pkg/proto/gen/go/exchange/v1"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -42,7 +42,7 @@ var gatewayCmd = &cobra.Command{
 		mux := runtime.NewServeMux(ropts...)
 		opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 
-		err = pb.RegisterExchangeHandlerFromEndpoint(
+		err = pb.RegisterExchangeServiceHandlerFromEndpoint(
 			ctx, mux, fmt.Sprintf("%s:%d", grpcHost, grpcPort), opts,
 		)
 		if err != nil {

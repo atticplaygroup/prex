@@ -10,7 +10,6 @@ import (
 type IStore interface {
 	db.Querier // Querier gives access sqlc-generated methods
 	UpsertAccountTx(ctx context.Context, arg UpsertAccountTxParams) (*int64, error)
-	MatchOrderTx(ctx context.Context, arg MatchOrderTxParams) (*db.FulfilledOrder, error)
 	WithdrawTx(ctx context.Context, arg WithdrawTxParams) (*int64, error)
 	CancelWithdrawTx(ctx context.Context, arg CancelWithdrawTxParams) error
 }

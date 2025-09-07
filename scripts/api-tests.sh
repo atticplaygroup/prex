@@ -16,71 +16,29 @@ ADMIN_PASSWORD=$(echo "${ADMIN_ACCOUNT}" | jq -r .password)
 export ADMIN_USERNAME
 export ADMIN_PASSWORD
 
-ENABLE_PREX_QUOTA_LIMITER=1 ENABLE_SERVICE_REGISTRATION_WHITELIST=1 ./bin/prex server start &
+PREX_GRPC_PORT=50051 ./bin/prex server connect &
 PREX_PID=$!
 
 ./bin/prex server gateway &
 GATEWAY_PID=$!
 
-curl -s "http://${PREX_URL}/v1/ping" | jq .pong || exit 1
-
-# TODO: get from service
-FREE_QUOTA_SERVICE_ID=1
-SOLD_QUOTA_SERVICE_ID=2
+curl --fail -s "http://${PREX_URL}/v1/ping" | jq .pong || exit 1
 
 bash scripts/register-account.sh ${TEMP_DIR}/seller.yml > /dev/null
 bash scripts/register-account.sh ${TEMP_DIR}/buyer.yml > /dev/null
 
 echo "register accounts success"
 
-ASK_PRICE=10
-QUANTITY=100000
-bash scripts/place-sell-order.sh ${TEMP_DIR}/admin.yml ${SOLD_QUOTA_SERVICE_ID} ${ASK_PRICE} ${QUANTITY}
+SELLER_DID=$(prex client account -c=${TEMP_DIR}/seller.yml | jq -r .username)
+QUANTITY=100
+SESSION_CREATION_TOKEN=$(bash scripts/buy-token.sh ${TEMP_DIR}/seller.yml ${SELLER_DID} ${QUANTITY} | jq -r .token)
 
-echo "Admin place sold quota order success"
+[ -n "${SESSION_CREATION_TOKEN}" ] || (
+    echo "failed to get session createion token"
+    exit 1
+)
 
-bash scripts/create-service.sh ${TEMP_DIR}/admin.yml
-
-echo "Admin create service success"
-
-# Seller
-BID_PRICE=20
-BID_QUANTITY=100
-USE_FREE_TOKEN=1
-bash scripts/buy-token.sh ${TEMP_DIR}/seller.yml ${SOLD_QUOTA_SERVICE_ID} ${BID_PRICE} ${BID_QUANTITY} ${USE_FREE_TOKEN}
-
-NEW_SERVICE_ID=3
-
-ASK_PRICE=12
-QUANTITY=120000
-bash scripts/place-sell-order.sh ${TEMP_DIR}/seller.yml ${NEW_SERVICE_ID} ${ASK_PRICE} ${QUANTITY}
-
-echo "Seller place sold quota order success"
-
-# Buyer
-BID_PRICE=20
-BID_QUANTITY=100
-USE_FREE_TOKEN=1
-bash scripts/buy-token.sh ${TEMP_DIR}/buyer.yml ${SOLD_QUOTA_SERVICE_ID} ${BID_PRICE} ${BID_QUANTITY} ${USE_FREE_TOKEN}
-
-echo "Buyer buy quota token success"
-
-BID_PRICE=14
-BID_QUANTITY=50
-USE_FREE_TOKEN=0
-bash scripts/buy-token.sh ${TEMP_DIR}/buyer.yml ${NEW_SERVICE_ID} ${BID_PRICE} ${BID_QUANTITY} ${USE_FREE_TOKEN}
-
-echo "Buyer buy service token success"
-
-LOGIN_RESPONSE=$(bash scripts/login-account.sh ${TEMP_DIR}/buyer.yml)
-ACCOUNT_ID=$(echo "${LOGIN_RESPONSE}" | jq -r .account.accountId)
-AUTH_TOKEN=$(echo "${LOGIN_RESPONSE}" | jq -r .accessToken)
-CLAIM_QUANTITY=30
-IS_FREE_TOKEN=0
-ACTIVATE=0
-bash scripts/claim-token.sh ${CLAIM_QUANTITY} ${NEW_SERVICE_ID} ${AUTH_TOKEN} ${ACCOUNT_ID} ${IS_FREE_TOKEN} ${ACTIVATE}
-
-echo "Buyer claim service token success"
+echo "${SESSION_CREATION_TOKEN}"
 
 echo "API test success"
 

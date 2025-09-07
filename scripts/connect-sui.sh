@@ -2,7 +2,7 @@
 
 set -eu
 
-SUI_NETWORK=devnet
+SUI_NETWORK=localnet
 
 if [ ${SUI_NETWORK} = "mainnet" ]; then
   SUI_NODE_URL=https://fullnode.mainnet.sui.io

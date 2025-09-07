@@ -10,3 +10,9 @@ const (
 
 	PAGE_TOKEN_DEFAULT_EXP_SECONDS = 24 * 3600
 )
+
+type CtxKey int64
+
+const (
+	KEY_ACCOUNT_ID CtxKey = iota
+)
