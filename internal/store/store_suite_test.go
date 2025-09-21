@@ -8,7 +8,7 @@ import (
 
 	"github.com/atticplaygroup/prex/internal/config"
 	"github.com/atticplaygroup/prex/internal/store"
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	migrate "github.com/rubenv/sql-migrate"
@@ -37,12 +37,13 @@ func TestStore(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	Conn, err = pgx.Connect(ctx, conf.TestDbUrl)
+
+	conn, err := pgxpool.New(ctx, conf.TestDbUrl)
 	if err != nil {
 		log.Fatalf("Failed to connect to db: %v\n", err)
 	}
-	defer Conn.Close(ctx)
-	StoreInstance = store.NewStore(Conn)
+	defer conn.Close()
+	StoreInstance = store.NewStore(conn)
 
 	RunSpecs(t, "Store Suite")
 }
@@ -50,7 +51,6 @@ func TestStore(t *testing.T) {
 var (
 	StoreTestDb   *sql.DB
 	Migrations    *migrate.FileMigrationSource
-	Conn          *pgx.Conn
 	StoreInstance *store.Store
 )
 

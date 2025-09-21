@@ -74,7 +74,7 @@ var _ = Describe("Checking deposit into database", Label("db"), func() {
 	When("user duplicates deposit with the same digest", func() {
 		It("should reject the deposit", func() {
 			ctx := context.Background()
-			s := store.NewStore(Conn)
+			s := *StoreInstance
 			params := &store.UpsertAccountTxParams{
 				Digest: "DdzbG47u5MDUrSVArmVYmvnpDvspgKeAXxzgq2cNnhpJ",
 				UpsertAccountParams: db.UpsertAccountParams{

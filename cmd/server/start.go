@@ -8,9 +8,10 @@ import (
 
 	"github.com/atticplaygroup/prex/internal/api"
 	"github.com/atticplaygroup/prex/internal/config"
+	db "github.com/atticplaygroup/prex/internal/db/sqlc"
 	"github.com/atticplaygroup/prex/internal/store"
 	pb "github.com/atticplaygroup/prex/pkg/proto/gen/go/exchange/v1"
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/spf13/cobra"
 )
 
@@ -30,12 +31,13 @@ var startCmd = &cobra.Command{
 		}
 
 		ctx := context.Background()
-		conn, err := pgx.Connect(ctx, conf.TestDbUrl)
+		pool, err := pgxpool.New(ctx, conf.TestDbUrl)
 		if err != nil {
 			log.Fatalf("failed to connect to db: %v\n", err)
 		}
-		defer conn.Close(ctx)
-		store1 := store.NewStore(conn)
+		defer pool.Close()
+		db.New(pool)
+		store1 := store.NewStore(pool)
 
 		server, err := api.NewServer(
 			conf,

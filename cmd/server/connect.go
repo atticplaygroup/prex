@@ -12,11 +12,13 @@ import (
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 
+	"github.com/jackc/pgx/v5/pgxpool"
+
 	"github.com/atticplaygroup/prex/internal/api"
 	"github.com/atticplaygroup/prex/internal/config"
+	db "github.com/atticplaygroup/prex/internal/db/sqlc"
 	"github.com/atticplaygroup/prex/internal/store"
 	"github.com/atticplaygroup/prex/pkg/proto/gen/go/exchange/v1/exchangeconnect"
-	"github.com/jackc/pgx/v5"
 	"github.com/spf13/cobra"
 )
 
@@ -32,12 +34,13 @@ var connectCmd = &cobra.Command{
 		log.Printf("conf: %+v", conf)
 
 		ctx := context.Background()
-		conn, err := pgx.Connect(ctx, conf.TestDbUrl)
+		pool, err := pgxpool.New(ctx, conf.TestDbUrl)
 		if err != nil {
 			log.Fatalf("failed to connect to db: %v\n", err)
 		}
-		defer conn.Close(ctx)
-		store1 := store.NewStore(conn)
+		defer pool.Close()
+		db.New(pool)
+		store1 := store.NewStore(pool)
 
 		server, err := api.NewServer(
 			conf,
@@ -63,9 +66,10 @@ var connectCmd = &cobra.Command{
 			),
 		)
 		mux.Handle(path, handler)
+		c := getCorsConfig()
 		http.ListenAndServe(
 			fmt.Sprintf("127.0.0.1:%d", conf.PrexGrpcPort),
-			h2c.NewHandler(mux, &http2.Server{}),
+			h2c.NewHandler(c.Handler(mux), &http2.Server{}),
 		)
 	},
 }
