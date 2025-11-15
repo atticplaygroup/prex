@@ -26,7 +26,6 @@ type Server struct {
 	redisClient   *redis.Client
 	auth          auth.Auth
 	paymentClient *payment.SuiPaymentClient
-	dbState       *DbState
 }
 
 func (s *Server) Ping(ctx context.Context, _ *connect.Request[pb.PingRequest]) (*connect.Response[pb.PingResponse], error) {
@@ -78,9 +77,6 @@ func NewServer(config config.Config, store store.Store) (*Server, error) {
 	if err := server.redisClient.Ping(ctx).Err(); err != nil {
 		log.Fatalf("cannot connect to redis: %v", err)
 	}
-	dbState := server.InitDb(ctx)
-	server.dbState = &dbState
-	fmt.Printf("dbState: %+v\n", dbState)
 	return server, nil
 }
 

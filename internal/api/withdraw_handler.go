@@ -24,7 +24,7 @@ func (s *Server) CreateWithdraw(
 ) (*connect.Response[pb.CreateWithdrawResponse], error) {
 	req := connectReq.Msg
 	// TODO: change priority fee mechanism to second price
-	chainAddressBytes, err := hex.DecodeString(req.GetWithdrawal().AddressTo[2:])
+	chainAddressBytes, err := hex.DecodeString(req.GetWithdrawal().GetAddressTo()[2:])
 	if err != nil || len(chainAddressBytes) != 32 {
 		return nil, status.Errorf(
 			codes.InvalidArgument,
@@ -144,11 +144,22 @@ func (s *Server) BatchProcessWithdraws(
 		return nil, fmt.Errorf("failed to update withdraw status: %v", err)
 	}
 	if err = tx.Commit(ctx); err != nil {
+		// Users will lose money in the rare case when commit succeeds inside the DB
+		// but somehow timeouts and returns an error. Even in this case we choose to maintain the
+		// autonomy of Prex instance by letting the users lose money instead of the platform.
+		// But Prex operators are still incentivized not to abuse users by tampering
+		// the DB connection as it will harm the Prex instance's reputation.
 		return nil, fmt.Errorf("failed to commit database change: %v", err)
 	}
 
 	digest, err := s.paymentClient.Withdraw(ctx, suiTx)
 	if err != nil {
+		// Users will lose money here, and it has a much higher risk than db connection which is in
+		// control of the Prex operator. But we argue here that this is still not a big problem
+		// because Sui transactions are idempotent. If one fails we can replay the same transaction.
+		// A TODO is to add an API to replay a transaction automatically given a digest if all
+		// withdrawals are in Processing status. But for now users can contact the Prex instance
+		// in case of a transaction failure to replay manually.
 		return nil, status.Errorf(
 			codes.Internal,
 			"failed to call payment: %v",

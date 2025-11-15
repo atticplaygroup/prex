@@ -17,7 +17,7 @@ import (
 type Config struct {
 	PaymentServiceUrl      string  `mapstructure:"PAYMENT_SERVICE_URL"`
 	AccountTtlPrice        float64 `mapstructure:"ACCOUNT_TTL_PRICE"`
-	MaxExpirationExtension int64   `mapstructure:"MAX_EXPIRATION_EXTENTION"`
+	MaxExpirationExtension int64   `mapstructure:"MAX_EXPIRATION_EXTENSION"`
 
 	WithdrawRecipientCount   int32  `mapstructure:"WITHDRAW_RECIPIENT_COUNT"`
 	WithdrawCheckStatusCount int32  `mapstructure:"WITHDRAW_CHECK_STATUS_COUNT"`
@@ -32,22 +32,16 @@ type Config struct {
 	TestMigrateSourceUrl string `mapstructure:"TEST_MIGRATE_SOURCE_URL"`
 
 	JwtSecret          string        `mapstructure:"JWT_SECRET"`
-	AdminUsername      string        `mapstructure:"ADMIN_USERNAME"`
-	AdminPassword      string        `mapstructure:"ADMIN_PASSWORD"`
 	MessageAuthTimeout time.Duration `mapstructure:"MESSAGE_AUTH_TIMEOUT"`
 	MaxDepositEpochGap int64         `mapstructure:"MAX_DEPOSIT_EPOCH_GAP"`
 	SessionTimeout     time.Duration `mapstructure:"SESSION_TIMEOUT"`
 
-	FreeQuotaRefreshPeriod time.Duration `mapstructure:"FREE_QUOTA_REFRESH_PERIOD"`
-	TokenTtl               time.Duration `mapstructure:"TOKEN_TTL"`
+	TokenTtl time.Duration `mapstructure:"TOKEN_TTL"`
 
 	RedisHost string `mapstructure:"redis_host"`
 	RedisPort uint16 `mapstructure:"redis_port"`
 
 	PrexGrpcPort uint16 `mapstructure:"PREX_GRPC_PORT"`
-
-	EnablePrexQuotaLimiter             bool `mapstructure:"ENABLE_PREX_QUOTA_LIMITER"`
-	EnableServiceRegistrationWhitelist bool `mapstructure:"ENABLE_SERVICE_REGISTRATION_WHITELIST"`
 }
 
 func LoadConfig(path string) (config Config) {

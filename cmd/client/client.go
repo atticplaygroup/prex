@@ -1,8 +1,10 @@
 package client
 
 import (
+	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"path"
@@ -15,6 +17,8 @@ import (
 	"github.com/mr-tron/base58"
 	"github.com/spf13/cobra"
 	"github.com/tyler-smith/go-bip39"
+	"golang.org/x/crypto/argon2"
+	"golang.org/x/crypto/hkdf"
 )
 
 var clientCmd = &cobra.Command{
@@ -53,11 +57,23 @@ type ParsedConfig struct {
 var conf *ParsedConfig
 
 func deriveFromMnemonic(mnemonic string, field string) (string, error) {
-	seed, err := bip39.NewSeedWithErrorChecking(mnemonic, field)
-	if err != nil {
+	// Some random public value. NOT safe. Demo purpose only. Generate and store a per account
+	// random value in a serious client.
+	argon2Salt := []byte{
+		0x5e, 0xc5, 0x57, 0xbd, 0x6f, 0x5d, 0xbb, 0xa2,
+		0xf2, 0xba, 0x8c, 0xf7, 0x31, 0xc6, 0xc2, 0x5b,
+		0xb8, 0x2a, 0x5e, 0x94, 0x52, 0x10, 0xae, 0x6e,
+		0xe7, 0xe1, 0xa2, 0x06, 0xff, 0xa8, 0xe7, 0x5d,
+	}
+	ikm := argon2.IDKey([]byte(mnemonic), argon2Salt, 3, 64*1024, 1, 32)
+	salt := argon2Salt
+	info := []byte(field)
+	h := hkdf.New(sha256.New, ikm, salt, info)
+	okm := make([]byte, 32)
+	if _, err := io.ReadFull(h, okm); err != nil {
 		return "", err
 	}
-	return base64.StdEncoding.EncodeToString(seed)[:64], nil
+	return base64.StdEncoding.EncodeToString(okm), nil
 }
 
 func parseConfig(config *Config) (*ParsedConfig, error) {
